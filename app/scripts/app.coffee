@@ -62,6 +62,19 @@ angular.module('slick', [])
         $timeout(() ->
           slider = $(element)
           currentIndex = scope.currentIndex if scope.currentIndex?
+          slider.on 'init', (sl) ->
+            scope.onInit() if attrs.onInit
+            if currentIndex?
+              sl.slideHandler(currentIndex)
+
+          slider.on 'afterChange', (event, slick, currentSlide, nextSlide) ->
+            scope.onAfterChange() if scope.onAfterChange
+
+            if currentIndex?
+              scope.$apply(->
+                currentIndex = currentSlide
+                scope.currentIndex = currentSlide
+              )
           slider.slick
             accessibility: scope.accessibility isnt "false"
             adaptiveHeight: scope.adaptiveHeight is "true"
@@ -84,17 +97,6 @@ angular.module('slick', [])
             initialSlide:scope.initialSlide or 0
             lazyLoad: scope.lazyLoad or "ondemand"
             onBeforeChange: if attrs.onBeforeChange then scope.onBeforeChange else undefined
-            onAfterChange: (sl, index) ->
-              scope.onAfterChange() if attrs.onAfterChange
-              if currentIndex?
-                scope.$apply(->
-                  currentIndex = index
-                  scope.currentIndex = index
-                )
-            onInit: (sl) ->
-              scope.onInit() if attrs.onInit
-              if currentIndex?
-                sl.slideHandler(currentIndex)
             onReInit: if attrs.onReInit then scope.onReInit else undefined
             onSetPosition: if attrs.onSetPosition then scope.onSetPosition else undefined
             pauseOnHover: scope.pauseOnHover isnt "false"
@@ -127,7 +129,7 @@ angular.module('slick', [])
           if newVal?
             if isInitialized
               destroySlick()
- 
+
             initializeSlick()
             isInitialized = true
         )

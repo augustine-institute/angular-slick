@@ -69,6 +69,25 @@ angular.module('slick', []).directive('slick', [
             if (scope.currentIndex != null) {
               currentIndex = scope.currentIndex;
             }
+            slider.on('init', function (sl) {
+              if (attrs.onInit) {
+                scope.onInit();
+              }
+              if (currentIndex != null) {
+                return sl.slideHandler(currentIndex);
+              }
+            });
+            slider.on('afterChange', function (event, slick, currentSlide, nextSlide) {
+              if (scope.onAfterChange) {
+                scope.onAfterChange();
+              }
+              if (currentIndex != null) {
+                return scope.$apply(function () {
+                  currentIndex = currentSlide;
+                  return scope.currentIndex = currentSlide;
+                });
+              }
+            });
             slider.slick({
               accessibility: scope.accessibility !== 'false',
               adaptiveHeight: scope.adaptiveHeight === 'true',
@@ -91,25 +110,6 @@ angular.module('slick', []).directive('slick', [
               initialSlide: scope.initialSlide || 0,
               lazyLoad: scope.lazyLoad || 'ondemand',
               onBeforeChange: attrs.onBeforeChange ? scope.onBeforeChange : void 0,
-              onAfterChange: function (sl, index) {
-                if (attrs.onAfterChange) {
-                  scope.onAfterChange();
-                }
-                if (currentIndex != null) {
-                  return scope.$apply(function () {
-                    currentIndex = index;
-                    return scope.currentIndex = index;
-                  });
-                }
-              },
-              onInit: function (sl) {
-                if (attrs.onInit) {
-                  scope.onInit();
-                }
-                if (currentIndex != null) {
-                  return sl.slideHandler(currentIndex);
-                }
-              },
               onReInit: attrs.onReInit ? scope.onReInit : void 0,
               onSetPosition: attrs.onSetPosition ? scope.onSetPosition : void 0,
               pauseOnHover: scope.pauseOnHover !== 'false',
