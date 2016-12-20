@@ -70,12 +70,14 @@ angular.module('slick', []).directive('slick', [
             if (scope.currentIndex != null) {
               currentIndex = scope.currentIndex;
             }
-            slider.on('init', function (event, sl) {
+            slider.on('init', function (sl) {
               if (attrs.onInit) {
                 scope.onInit();
               }
               if (currentIndex != null) {
                 return sl.slideHandler(currentIndex);
+              } else {
+                return sl.slideHandler(0);
               }
             });
             slider.on('afterChange', function (event, slick, currentSlide, nextSlide) {
@@ -108,7 +110,7 @@ angular.module('slick', []).directive('slick', [
               fade: scope.fade === 'true',
               focusOnSelect: scope.focusOnSelect === 'true',
               infinite: scope.infinite !== 'false',
-              initialSlide: parseInt(scope.initialSlide) || 0,
+              initialSlide: scope.initialSlide || 0,
               lazyLoad: scope.lazyLoad || 'ondemand',
               mobileFirst: scope.mobileFirst !== 'false',
               onBeforeChange: attrs.onBeforeChange ? scope.onBeforeChange : void 0,

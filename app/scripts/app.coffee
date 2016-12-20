@@ -67,6 +67,8 @@ angular.module('slick', [])
             scope.onInit() if attrs.onInit
             if currentIndex?
               sl.slideHandler(currentIndex)
+            else
+              sl.slideHandler(0)
 
           slider.on 'afterChange', (event, slick, currentSlide, nextSlide) ->
             scope.onAfterChange() if scope.onAfterChange
