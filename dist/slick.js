@@ -74,10 +74,12 @@ angular.module('slick', []).directive('slick', [
               if (attrs.onInit) {
                 scope.onInit();
               }
-              if (currentIndex != null) {
-                return sl.slideHandler(currentIndex);
-              } else {
-                return sl.slideHandler(0);
+              if (sl.slideHandler) {
+                if (currentIndex != null) {
+                  return sl.slideHandler(currentIndex);
+                } else {
+                  return sl.slideHandler(0);
+                }
               }
             });
             slider.on('afterChange', function (event, slick, currentSlide, nextSlide) {
