@@ -72,7 +72,7 @@ angular.module('slick', []).directive('slick', [
             }
             slider.on('init', function (sl) {
               if (attrs.onInit) {
-                scope.onInit();
+                scope.onInit()(event, sl);
               }
               if (sl.slideHandler) {
                 if (currentIndex != null) {
