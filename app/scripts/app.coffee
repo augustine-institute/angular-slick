@@ -64,7 +64,11 @@ angular.module('slick', [])
           slider = $(element)
           currentIndex = scope.currentIndex if scope.currentIndex?
           slider.on 'init', (event, sl) ->
-            scope.onInit() if attrs.onInit
+            if attrs.onInit
+              if typeof scope.onInit() == 'function'
+                scope.onInit()(event, sl)
+              else
+                scope.onInit()
             if sl.slideHandler
               if currentIndex?
                 sl.slideHandler(currentIndex)
