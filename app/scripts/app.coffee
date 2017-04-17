@@ -63,7 +63,7 @@ angular.module('slick', [])
         $timeout(() ->
           slider = $(element)
           currentIndex = scope.currentIndex if scope.currentIndex?
-          slider.on 'init', (sl) ->
+          slider.on 'init', (event, sl) ->
             scope.onInit() if attrs.onInit
             if sl.slideHandler
               if currentIndex?
