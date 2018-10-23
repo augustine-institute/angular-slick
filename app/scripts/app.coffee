@@ -28,8 +28,8 @@ angular.module('slick', [])
       initialSlide: "@"
       lazyLoad: "@"
       mobileFirst: "@"
-      onBeforeChange: "&"
-      onAfterChange: "&"
+      onBeforeChange: "="
+      onAfterChange: "="
       onInit: "&"
       onReInit: "&"
       onSetPosition: "&"
@@ -76,7 +76,15 @@ angular.module('slick', [])
                 sl.slideHandler(0)
 
           slider.on 'afterChange', (event, slick, currentSlide, nextSlide) ->
-            scope.onAfterChange() if scope.onAfterChange
+            scope.onAfterChange(event, slick, currentSlide, nextSlide) if scope.onAfterChange
+
+            if currentIndex?
+              scope.$apply(->
+                currentIndex = currentSlide
+                scope.currentIndex = currentSlide
+              )
+          slider.on 'beforeChange', (event, slick, currentSlide, nextSlide) ->
+            scope.onBeforeChange(event, slick, currentSlide, nextSlide) if scope.onAfterChange
 
             if currentIndex?
               scope.$apply(->
@@ -105,7 +113,6 @@ angular.module('slick', [])
             initialSlide:scope.initialSlide or 0
             lazyLoad: scope.lazyLoad or "ondemand"
             mobileFirst: scope.mobileFirst isnt "false"
-            onBeforeChange: if attrs.onBeforeChange then scope.onBeforeChange else undefined
             onReInit: if attrs.onReInit then scope.onReInit else undefined
             onSetPosition: if attrs.onSetPosition then scope.onSetPosition else undefined
             pauseOnHover: scope.pauseOnHover isnt "false"

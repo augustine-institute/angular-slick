@@ -29,8 +29,8 @@ angular.module('slick', []).directive('slick', [
         initialSlide: '@',
         lazyLoad: '@',
         mobileFirst: '@',
-        onBeforeChange: '&',
-        onAfterChange: '&',
+        onBeforeChange: '=',
+        onAfterChange: '=',
         onInit: '&',
         onReInit: '&',
         onSetPosition: '&',
@@ -88,7 +88,18 @@ angular.module('slick', []).directive('slick', [
             });
             slider.on('afterChange', function (event, slick, currentSlide, nextSlide) {
               if (scope.onAfterChange) {
-                scope.onAfterChange();
+                scope.onAfterChange(event, slick, currentSlide, nextSlide);
+              }
+              if (currentIndex != null) {
+                return scope.$apply(function () {
+                  currentIndex = currentSlide;
+                  return scope.currentIndex = currentSlide;
+                });
+              }
+            });
+            slider.on('beforeChange', function (event, slick, currentSlide, nextSlide) {
+              if (scope.onAfterChange) {
+                scope.onBeforeChange(event, slick, currentSlide, nextSlide);
               }
               if (currentIndex != null) {
                 return scope.$apply(function () {
@@ -119,7 +130,6 @@ angular.module('slick', []).directive('slick', [
               initialSlide: scope.initialSlide || 0,
               lazyLoad: scope.lazyLoad || 'ondemand',
               mobileFirst: scope.mobileFirst !== 'false',
-              onBeforeChange: attrs.onBeforeChange ? scope.onBeforeChange : void 0,
               onReInit: attrs.onReInit ? scope.onReInit : void 0,
               onSetPosition: attrs.onSetPosition ? scope.onSetPosition : void 0,
               pauseOnHover: scope.pauseOnHover !== 'false',
