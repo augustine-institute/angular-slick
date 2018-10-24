@@ -75,14 +75,23 @@ angular.module('slick', [])
               else
                 sl.slideHandler(0)
 
-          slider.on 'afterChange', (event, slick, currentSlide, nextSlide) ->
-            scope.onAfterChange() if scope.onAfterChange
+          slider.on 'afterChange', (event, slick, currentSlide) ->
+            scope.onAfterChange({event: event, slick: slick, thisSlide: currentSlide}) if scope.onAfterChange
 
             if currentIndex?
               scope.$apply(->
                 currentIndex = currentSlide
                 scope.currentIndex = currentSlide
               )
+          slider.on 'beforeChange', (event, slick, currentSlide, nextSlide) ->
+            scope.onBeforeChange({event: event, slick: slick, currentSlide: currentSlide, nextSlide: nextSlide}) if scope.onBeforeChange
+
+            if currentIndex?
+              scope.$apply(->
+                currentIndex = currentSlide
+                scope.currentIndex = currentSlide
+              )
+
           slider.slick
             accessibility: scope.accessibility isnt "false"
             adaptiveHeight: scope.adaptiveHeight is "true"
